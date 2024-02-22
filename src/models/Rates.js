@@ -11,6 +11,7 @@ const rateSchema = new Schema(
     rateID: { type: String, required: true, unique: true },
     date: { type: String, required: true, default: getDate() },
     subscriberCalled: { type: Boolean, default: false },
+    rateChange: { type: String, default: "0" },
   },
   {
     timestamps: true,

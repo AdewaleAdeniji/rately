@@ -12,6 +12,7 @@ export const GetRatesByRateID = WrapHandler(
   async (req: Request, res: Response) => {
     const rateID = req.params.rateID;
     const rate = await GetRateByRateID(rateID);
+    if(!rate) return res.status(404).json({ message: "Rate not found" });
     res.json(rate);
   }
 );
@@ -21,6 +22,10 @@ export const GetRateByRateID = async (rateID: string) => {
 export const GetRates = WrapHandler(async (req: Request, res: Response) => {
   // get the rates for the day
   if (req.query && Object.keys(req.query).length > 0) {
+    // check if any object.values is undefined
+    if (Object.values(req.query).includes(undefined)) {
+      return res.status(400).json({ message: "Invalid query" });
+    }
     return await FilterRates(req, res);
   }
   const rates = await GetAllRates();

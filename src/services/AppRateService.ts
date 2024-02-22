@@ -15,31 +15,6 @@ export const CreateAppRate = async (rate: ICreateRate) => {
     return RateModel.create(rate);
 }
 
-export const GetAllAppRatesold = async () => {
-    const getAllRatesByCurrency = async (currency: string) => {
-        return await RateModel
-            .find({ rateFrom: currency })
-            .sort({ rateAppName: 1, createdAt: -1 })
-            .select("-_id -__v -updatedAt -rateAddedBy");
-    };
-
-    const currencies = [RateCurrencies.USD, RateCurrencies.EUR, RateCurrencies.GBP];
-    const allRates: { [key in RateCurrencies]: any } = {
-        USD: null,
-        EUR: null,
-        GBP: null
-    };
-    for (const currency of currencies) {
-        const rates = await getAllRatesByCurrency(currency);
-
-        allRates[currency] = rates.reduce((acc: any[], rate: any) => {
-            acc.push(rate);
-            return acc;
-        }, []);
-    }
-
-    return allRates;
-};
 export const GetAllAppRates = async () => {
     const getAllRatesByCurrency = async (currency: string) => {
         return await RateModel
@@ -58,16 +33,17 @@ export const GetAllAppRates = async () => {
     };
 
     const currencies = [RateCurrencies.USD, RateCurrencies.EUR, RateCurrencies.GBP];
-    const allRates: { [key in RateCurrencies]: any } = {
-        USD: null,
-        EUR: null,
-        GBP: null
-    };
+    // const allRates: { [key in RateCurrencies]: any } = {
+    //     USD: null,
+    //     EUR: null,
+    //     GBP: null
+    // };
+    const allRates = []
 
     for (const currency of currencies) {
         const rates = await getAllRatesByCurrency(currency);
 
-        allRates[currency] = rates;
+        allRates.push(...rates);
     }
 
     return allRates;

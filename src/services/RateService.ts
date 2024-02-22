@@ -6,11 +6,25 @@ import { generateID, getDate } from '../utils';
 type ICreateRate = IRate & {
     rateID?: string;
     date?: string;
+    rateChange?: string;
 } 
 
 export const CreateRate = async (rate: ICreateRate) => {
+    const currency = await RateModel.find({ rateFrom: rate.rateFrom }).sort({ createdAt: -1 }).limit(1).select("-_id -__v -updatedAt -rateAddedBy");
+    var rateChange = "";
+    if(currency.length > 0){
+        const lastRate = currency[0];
+        const lastRateValue = parseFloat(lastRate.rate);
+        const currentRateValue = parseFloat(rate.rate);
+        const rateChangeValue = currentRateValue - lastRateValue;
+        // rateChange = rateChangeValue.toFixed(2);
+        // calculate percentage change
+        const percentageChange = (rateChangeValue / lastRateValue) * 100;
+        rateChange = percentageChange.toFixed(2);
+    }
     const rateID = rate.rateFrom + "" + await generateID();
     rate.rateID = rateID;
+    rate.rateChange = rateChange;
     // rate.date = getDate();
     return RateModel.create(rate);
 }
