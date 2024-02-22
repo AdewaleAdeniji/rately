@@ -6,6 +6,7 @@ import {
   } from "../services/AppRateService";
 import { WrapHandler, getDate, validateRequest } from "../utils";
 import { Request, Response } from "express";
+
 export const GetAppRates = WrapHandler(async (req: Request, res: Response) => {
   // get the rates for the day
   if(req.query && Object.keys(req.query).length > 0){
@@ -84,7 +85,7 @@ export const ImportRate = async (
   for (const rate of rates) {
     const save = await SaveRate({
       ...rate,
-      date: dateAdded || getDate(),
+      date: rate?.date || getDate(),
       rateAddedBy: hasAccess.name,
     });
     if (save) {
