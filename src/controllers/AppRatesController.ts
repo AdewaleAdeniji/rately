@@ -9,7 +9,9 @@ import { Request, Response } from "express";
 
 export const GetAppRates = WrapHandler(async (req: Request, res: Response) => {
   // get the rates for the day
+  console.log('getting all app rates')
   if(req.query && Object.keys(req.query).length > 0){
+    console.log('filtering all app rates')
     return await FilterAppRates(req, res);
   }
   const rates = await GetAllAppRates();

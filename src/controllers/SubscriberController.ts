@@ -14,6 +14,7 @@ import RateModel from "../models/Rates";
 
 export const JoinSubscribers = WrapHandler(
   async (req: Request, res: Response) => {
+    console.log("Joining subscribers");
     const val = validateRequest(req.body, ["email", "webhookURL", "appName"]);
     if (val) return res.status(400).json({ message: val });
     const { email, webhookURL, appName } = req.body;
